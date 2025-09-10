@@ -1,149 +1,54 @@
 # Create Okta App for AWS IAM Identity Center
-Create Okta App for AWS IAM Identity Center
+
 ## Step 1. Log in to Okta Admin Console
-
-Go to your Okta org: https://<your-org>.okta.com/admin
-
-Make sure you’re logged in as a Super Admin or App Admin.
+<img width="596" height="76" alt="image" src="https://github.com/user-attachments/assets/e5ec8ad5-f25f-41a2-8f68-1cb3a95c9fd5" />
 
 ## Step 2. Add AWS IAM Identity Center app
-
-In the left-hand menu, go to Applications → Applications.
-
-Click Browse App Catalog.
-
-Search for AWS IAM Identity Center (sometimes shown as AWS Single Sign-On).
-
-Select it, then click Add Integration.
+<img width="785" height="155" alt="image" src="https://github.com/user-attachments/assets/ab914578-2929-43ea-b76b-9ad65e5d9e0d" />
 
 ## Step 3. Configure SAML Settings
-
-On the General Settings page:
-
-Give it a descriptive label like AWS IAM Identity Center (SSO).
-
-Optionally assign to default user groups now, or leave for later.
-
-On the Sign-On Options page:
-
-Leave the default SAML 2.0 configuration.
-
-Do not change the default unless AWS requires a custom ACS URL (you’ll configure that later in AWS IAM Identity Center).
+<img width="960" height="251" alt="image" src="https://github.com/user-attachments/assets/a092635b-c44a-4d8c-bde2-874f093f5d54" />
 
 ## Step 4. Assign Users or Groups
+<img width="678" height="125" alt="image" src="https://github.com/user-attachments/assets/4b71bde0-935c-490b-a5e7-aafafaa7ae09" />
 
-Go to the Assignments tab of the app.
-
-Assign one or two test users or groups who will authenticate into AWS.
-
-(Later, you’ll map Okta groups → AWS IAM roles.)
 
 ## Step 5. Download the Okta IdP Metadata
+<img width="881" height="181" alt="image" src="https://github.com/user-attachments/assets/5c20a624-f144-4e61-8104-4f50cdb52ec5" />
 
-Go to the app’s Sign On tab.
 
-Scroll down to SAML Signing Certificates.
-
-Click Actions → View IdP metadata.
-
-This will open an XML file in a new browser tab.
-
-Save it locally as okta-idp-metadata.xml — you’ll upload this into AWS IAM Identity Center.
-
-✅ At this point you now have:
-
-An Okta SAML app for AWS IAM Identity Center.
-
-The IdP metadata XML file downloaded and ready for AWS.
-
-# Configure AWS IAM Identity Center with Okta as IdP
+### Configure AWS IAM Identity Center with Okta as IdP
 ## Step 1. Log in to AWS IAM Identity Center
+<img width="709" height="123" alt="image" src="https://github.com/user-attachments/assets/33199c7a-df53-478d-94e5-898e421e82d0" />
 
-Sign in to the AWS Management Console with an admin account.
-
-In the search bar, type IAM Identity Center and open it.
-(If this is your first time, AWS may ask you to enable IAM Identity Center.)
 
 ## Step 2. Go to Identity Source Settings
+<img width="530" height="128" alt="image" src="https://github.com/user-attachments/assets/e661d65c-1bc2-45f2-bef4-5c28e4990dba" />
 
-In the left menu, click Settings.
-
-Under Identity Source, click Change identity source.
-
-Select External Identity Provider (SAML 2.0).
 
 ## Step 3. Upload Okta Metadata
-
-In the External IdP settings section:
-
-Upload the okta-idp-metadata.xml file you downloaded earlier from Okta.
-
-This tells AWS to trust Okta as the SAML IdP.
-
-Save changes.
+<img width="761" height="153" alt="image" src="https://github.com/user-attachments/assets/6214d7bd-2766-42cc-a7b8-90ff2c966ed1" />
 
 ## Step 4. Download AWS Metadata for Okta
+<img width="956" height="189" alt="image" src="https://github.com/user-attachments/assets/e8fbd64d-2a20-4c66-8f78-f1c05615ea77" />
 
-After saving, AWS will generate its own Service Provider (SP) metadata file or show ACS URLs / Entity IDs.
-
-Download this metadata and import it back into Okta (in the AWS IAM Identity Center app → Sign On tab → Edit → upload SP metadata).
-This completes the trust on both sides.
 
 ## Step 5. Enable SCIM Provisioning (Recommended)
+<img width="702" height="216" alt="image" src="https://github.com/user-attachments/assets/8a3fdded-d0f3-4d58-ad77-83624e768de8" />
 
-Still in Settings → Identity Source, enable Automatic provisioning (SCIM).
-
-AWS provides a SCIM endpoint and Bearer Token.
-
-In Okta → your AWS IAM Identity Center app → Provisioning tab:
-
-Enter the SCIM base URL.
-
-Paste the Bearer token.
-
-Enable "Create Users", "Update Users", and "Deactivate Users".
-
-✅ Now Okta can automatically create/update/remove AWS users when their lifecycle changes in Okta.
+ Now Okta can automatically create/update/remove AWS users when their lifecycle changes in Okta.
 
 ## Step 6. Create Permission Sets in AWS
+<img width="584" height="192" alt="image" src="https://github.com/user-attachments/assets/d4858d1c-1089-4cbe-8dce-28fa256e462d" />
 
-In IAM Identity Center → Permission Sets, create roles like:
-
-AWS-Admins (AdministratorAccess)
-
-AWS-DevOps (PowerUserAccess)
-
-AWS-ReadOnly (ReadOnlyAccess)
-
-Assign these permission sets to AWS accounts.
 
 ## Step 7. Map Okta Groups → AWS Permission Sets
-
-In Okta, create groups that match your permission sets (e.g., aws-admins, aws-devops).
-
-Assign these groups to the AWS IAM Identity Center app in Okta.
-
-Okta will provision the groups/users into AWS via SCIM.
+<img width="834" height="125" alt="image" src="https://github.com/user-attachments/assets/abd89f2a-8a7c-4980-abf2-9327ef6c2077" />
 
 ## Step 8. Test SSO
+<img width="810" height="205" alt="image" src="https://github.com/user-attachments/assets/8b833705-e08a-4a80-9bfc-2848770bfa28" />
 
-Go to your AWS IAM Identity Center user portal URL (something like https://<your-org>.awsapps.com/start).
-
-Log in with Okta credentials.
-
-You should see the AWS accounts and roles assigned.
-
-Test both console login and CLI login (aws sso login --profile myprofile).
-
-✅ At this point, you have:
-
-Okta → AWS IAM Identity Center (SAML SSO).
-
-Okta → AWS IAM Identity Center (SCIM provisioning).
-
-Okta Groups mapped to AWS permission sets.
-
-# # Okta + AWS IAM Identity Center — Terraform starter repo
+## Okta + AWS IAM Identity Center — Terraform starter repo
 
 This repository scaffold contains Terraform code to create:
 - Okta SAML app (AWS IAM Identity Center) and groups
