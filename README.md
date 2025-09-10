@@ -55,8 +55,6 @@ This repository scaffold contains Terraform code to create:
 - Group assignments in Okta
 - AWS IAM Identity Center (SSO) Permission Set and Account Assignment example
 
-
---- filename: README.md ---
 # okta-aws-terraform-starter
 
 ## What this repo contains
@@ -203,7 +201,6 @@ output "aws_permission_set_arn" {
 }
 ```
 
---- filename: notes.md ---
 # Notes & Caveats
 - The Okta SAML app resource may require manual adjustment for SAML certificates and activation. It's common to create the app in the Okta console, export its settings, then import into Terraform state and manage thereafter.
 - AWS IAM Identity Center (SSO) must be **enabled** in the AWS console (one-time) before you can reliably manage SSO resources via Terraform.
